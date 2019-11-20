@@ -4,12 +4,12 @@ import re
 
 class PeriodInSuiteName(SuiteRule):
     '''Warn about periods in the suite name
-    
+
     Since robot uses "." as a path separator, using a "." in a suite
-    name can lead to ambiguity. 
+    name can lead to ambiguity.
     '''
     severity = WARNING
-    
+
     def apply(self,suite):
         if "." in suite.name:
             self.report(suite, "'.' in suite name '%s'" % suite.name, 0)
@@ -74,16 +74,16 @@ class RequireSuiteDocumentation(SuiteRule):
                 break
 
         self.report(suite, "No suite documentation", linenum)
-            
+
 class TooManyTestCases(SuiteRule):
     '''
-    Should not have too many tests in one suite. 
+    Should not have too many tests in one suite.
 
     The exception is if they are data-driven.
 
     https://code.google.com/p/robotframework/wiki/HowToWriteGoodTestCases#Test_suite_structure
 
-    You can configure the maximum number of tests. The default is 10. 
+    You can configure the maximum number of tests. The default is 10.
     '''
     severity = WARNING
     max_allowed = 10
@@ -105,3 +105,44 @@ class TooManyTestCases(SuiteRule):
                 suite, "Too many test cases (%s > %s) in test suite"
                 % (len(testcases), self.max_allowed), testcases[self.max_allowed].linenumber
             )
+
+
+class DuplicateSettings(SuiteRule):
+    '''
+    Verify that settings are not repeated in a Settings table
+
+    This has been made an error in Robot3.0
+    https://github.com/robotframework/robotframework/issues/2204
+    '''
+    severity = ERROR
+
+    def apply(self, suite):
+        for table in suite.tables:
+            if normalize_name(table.name) == "settings":
+                self._check_duplicates(suite, table)
+
+    def _check_duplicates(self, suite, table):
+        seen_settings = {}
+        for statement in table.statements:
+            setting = normalize_name(statement[0])
+
+            # skip empty lines and comments
+            if setting == "":
+                continue
+            if setting.startswith("#"):
+                continue
+
+            # permitted duplicates
+            if setting in ['library', 'variables', 'resource']:
+                continue
+
+            if setting in seen_settings:
+                prev_statement = seen_settings[setting]
+                self.report(suite,
+                            "Setting '%s' used multiple times " \
+                            "(previously defined line %d)" % \
+                            (statement[0], prev_statement.startline),
+                            statement.startline)
+            else:
+                seen_settings[setting] = statement
+
