@@ -14,12 +14,12 @@
 | | [Setup] | Run rf-lint with the following options:
 | | ... | --no-filename
 | | ... | --ignore | all
-| | ... | --error  | DuplicateSettings
+| | ... | --error  | DuplicateSettingsInSuite
 | | ... | test_data/acceptance/rules/DuplicateSettings_Data.robot
 | |
 | | Stderr should be | ${EMPTY}
 | | Stdout should be
-| | ... | E: 4, 0: Setting 'Documentation' used multiple times (previously defined line 2) (DuplicateSettings)
+| | ... | E: 4, 0: Setting 'Documentation' used multiple times (previously used line 2) (DuplicateSettingsInSuite)
 | |
 | | rflint return code should be | 1
 | | rflint should report 1 errors
