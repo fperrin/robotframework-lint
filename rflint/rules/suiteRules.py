@@ -1,10 +1,6 @@
-from rflint.common import SuiteRule, ERROR, WARNING
+from rflint.common import SuiteRule, ERROR, WARNING, normalize_name
 from rflint.parser import SettingTable
 import re
-
-def normalize_name(string):
-    '''convert to lowercase, remove spaces and underscores'''
-    return string.replace(" ", "").replace("_", "").lower()
 
 class PeriodInSuiteName(SuiteRule):
     '''Warn about periods in the suite name

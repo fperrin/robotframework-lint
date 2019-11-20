@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from rflint.common import TestRule, ERROR, WARNING
+from rflint.common import TestRule, ERROR, WARNING, normalize_name
 from rflint.parser import SettingTable
 
 
@@ -51,7 +51,8 @@ class RequireTestDocumentation(TestRule):
             return
 
         for setting in testcase.settings:
-            if setting[1].lower() == "[documentation]" and len(setting) > 2:
+            if normalize_name(setting[1]) == "[documentation]" and \
+               len(setting) > 2:
                 return
 
         # set the line number to the line immediately after the testcase name

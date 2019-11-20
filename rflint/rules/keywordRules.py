@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from rflint.common import KeywordRule, ERROR
+from rflint.common import KeywordRule, ERROR, normalize_name
 from rflint.parser import SettingTable
 
 class RequireKeywordDocumentation(KeywordRule):
@@ -23,7 +23,8 @@ class RequireKeywordDocumentation(KeywordRule):
 
     def apply(self, keyword):
         for setting in keyword.settings:
-            if setting[1].lower() == "[documentation]" and len(setting) > 2:
+            if normalize_name(setting[1]) == "[documentation]" and \
+               len(setting) > 2:
                 return
 
         # set the line number to the line immediately after the keyword name
