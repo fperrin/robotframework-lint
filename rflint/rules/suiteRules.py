@@ -146,3 +146,40 @@ class DuplicateSettings(SuiteRule):
             else:
                 seen_settings[setting] = statement
 
+
+class DuplicateVariables(SuiteRule):
+    '''Verify that variables are not defined twice in the same table
+
+    This is not an error, but leads to surprising result (first definition
+    wins, later is ignored).
+    '''
+    def apply(self, suite):
+        for table in suite.tables:
+            if normalize_name(table.name) == "variables":
+                self._check_duplicates(suite, table)
+
+    def _check_duplicates(self, suite, table):
+        seen_vars = {}
+        for var in table.rows:
+            varname = var[0]
+
+            # skip empty lines, commands and continuation lines
+            if varname == "":
+                continue
+            if varname.startswith("#"):
+                continue
+            if varname.startswith("..."):
+                continue
+
+            # remove curly brackets and optional =
+            varname = varname.lstrip("${").rstrip("}= ")
+            normal_varname = normalize_name(varname)
+
+            if normal_varname in seen_vars:
+                prev_var = seen_vars[normal_varname]
+                self.report(suite, "Duplicate definition of variable '%s' " \
+                                   "(previously defined line %d)" % \
+                                   (varname, prev_var.linenumber),
+                            var.linenumber)
+            else:
+                seen_vars[normal_varname] = var
