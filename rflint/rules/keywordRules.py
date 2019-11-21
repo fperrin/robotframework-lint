@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
+import re
+
 from rflint.common import KeywordRule, ERROR, normalize_name
 from rflint.parser import SettingTable
 
@@ -48,3 +50,15 @@ class TooFewKeywordSteps(KeywordRule):
         if len(steps) < self.min_required:
             msg = "Too few steps (%s) in keyword" % len(steps)
             self.report(keyword, msg, keyword.linenumber)
+
+
+class InvalidSettingInKeyword(KeywordRule):
+    '''Check that settings for a keyword have the expected name'''
+    def apply(self, keyword):
+        valid_settings = re.compile(r'^(arguments|documentation|tags|return|teardown|timeout)$', re.I)
+        for setting in keyword.settings:
+            setting_name = setting[1].lstrip("[ ").rstrip("] ")
+            if not valid_settings.match(setting_name):
+                self.report(keyword,
+                            "Non-existing setting '%s'" % setting_name,
+                            setting.startline)

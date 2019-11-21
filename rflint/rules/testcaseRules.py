@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
+import re
+
 from rflint.common import TestRule, ERROR, WARNING, normalize_name
 from rflint.parser import SettingTable
 
@@ -103,3 +105,14 @@ class TooManyTestSteps(TestRule):
             self.report(testcase,
                         "Too many steps (%s) in test case" % len(steps),
                         steps[self.max_allowed].startline)
+
+class InvalidSetting(TestRule):
+    '''Check that settings for a test case have the expected name'''
+    def apply(self, testcase):
+        valid_settings = re.compile(r'^(documentation|tags|setup|teardown|template|timeout)$', re.I)
+        for setting in testcase.settings:
+            setting_name = setting[1].lstrip("[ ").rstrip("] ")
+            if not valid_settings.match(setting_name):
+                self.report(testcase,
+                            "Non-existing setting '%s'" % setting_name,
+                            setting.startline)
