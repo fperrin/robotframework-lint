@@ -13,9 +13,8 @@
 | ... | log | ${result.stdout}\n${result.stderr}
 
 *** Test Cases ***
-    
 | Testcase with unicode in the name
-| | [Documentation] 
+| | [Documentation]
 | | ... | Verify we can properly report issues in test cases with unicode
 | | ... | in the test case name
 | | [tags] | issue-35 | unicode

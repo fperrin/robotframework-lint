@@ -1,7 +1,7 @@
 *** Settings ***
 | Documentation | Tests for the testcase rule 'TooFewTestSteps'
 | Resource      | ../SharedKeywords.robot
-| 
+|
 | Test Teardown
 | ... | Run keyword if | "${TEST STATUS}" == "FAIL"
 | ... | log | ${result.stdout}\n${result.stderr}

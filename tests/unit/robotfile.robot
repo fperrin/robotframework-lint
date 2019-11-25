@@ -5,11 +5,11 @@
 | Suite Setup | Parse a robot file and save as a suite variable
 
 *** Test Cases ***
-| Parsed object has correct .name attribute
+| Parsed object has correct 'name' attribute
 | | [Documentation] | Verify that the parsed data has a name attribute
 | | Should be equal | ${rf.name} | pipes
 
-| Parsed object has correct .path attribute
+| Parsed object has correct 'path' attribute
 | | [Documentation] | Verify that the path attribute is correct
 | | ${expected}= | Evaluate | os.path.abspath("${test_data}") | os
 | | ${actual}= | Set variable | ${rf.path}
