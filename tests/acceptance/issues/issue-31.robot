@@ -11,7 +11,7 @@
 *** Test Cases ***
 | Issue 31
 | | [tags] | issue-31
-| | [Documentation] | 
+| | [Documentation] |
 | | ... | Verify that GeneralRule is passed an object with a type attribute
 | |
 | | Run rf-lint with the following options:

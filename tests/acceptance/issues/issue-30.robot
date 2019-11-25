@@ -20,11 +20,8 @@
 | | ... | --warning   | Issue30
 | | ... | --configure | Issue30:42
 | | ... | test_data/keywords.robot
-| | 
+| |
 | | Stderr should be | ${EMPTY}
 | | Stdout should be
 | | ... | + test_data/keywords.robot
 | | ... | W: 0, 0: the configured value is 42 (Issue30)
-
-
-
