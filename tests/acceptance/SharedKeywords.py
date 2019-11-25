@@ -1,3 +1,5 @@
+import os
+
 from robot.libraries.BuiltIn import BuiltIn
 
 def create_a_test_suite(filename, *args):
@@ -47,4 +49,8 @@ def create_a_test_suite(filename, *args):
 
     return suite
 
-    
+def list_robot_files_in(location):
+    for (dirpath, _, filenames) in os.walk(location):
+        for filename in filenames:
+            if filename.endswith(".robot"):
+                yield os.path.join(dirpath, filename)
